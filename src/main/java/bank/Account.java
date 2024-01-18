@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
+public class Account {
   private int id;
-  private String name;
-  private String username;
-  private String password;
-  private int accountId;
+  private String type;
+  private double balance;
 }
