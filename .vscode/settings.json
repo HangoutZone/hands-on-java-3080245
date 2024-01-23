@@ -21,4 +21,6 @@
   "workbench.fontAliasing": "antialiased",
   "workbench.statusBar.visible": true,
   "java.server.launchMode": "Standard"
+  "workbench.statusBar.visible": true,
+  "java.server.launchMode": "Standard"
 }
