@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import bank.exceptions.AmountException;
+
 public class DataSource {
 
   public static Connection connect() {
@@ -59,9 +61,32 @@ public class DataSource {
     return account;
   }
 
+  public static void updateAccountBalance(int id, double amount) {
+    String sql = "update accounts set balance = ? where id = ?";
+    try(
+      Connection connection = connect();
+      PreparedStatement statement = connection.prepareStatement(sql);
+    ){
+      statement.setDouble(1, amount);
+      statement.setInt(2, id);
+
+      statement.executeUpdate();
+    }catch(SQLException e){
+      e.printStackTrace();
+    }
+  }
+
   public static void main(String[] args) {
     Customer c = getCustomer("lfromonte9@de.vu");
     Account a = getAccount(c.getAccountId());
     System.out.println("Account ID: " + a.getId() + "\nBalance: " + a.getBalance());
+    try
+    {
+      a.deposit(100);
+    }catch(AmountException e){
+      System.out.println("why?");
+    }
+    updateAccountBalance(c.getId(), a.getBalance());
+    System.out.println("\nBalance: " + a.getBalance());
   }
 }
