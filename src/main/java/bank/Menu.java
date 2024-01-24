@@ -1,21 +1,31 @@
 package bank;
 
 import java.util.Scanner;
+import java.util.Random;
 
 import javax.security.auth.login.LoginException;
 
 import bank.exceptions.AmountException;
+import bank.exceptions.UserExistException;
 
 public class Menu {
 
   private Scanner scanner;
+  private Scanner scanText;
 
   public static void main(String[] args) {
     System.out.println("Welcome to Globe Bank International!");
 
     Menu menu = new Menu();
     menu.scanner = new Scanner(System.in);
+    menu.scanText = new Scanner(System.in);
 
+    System.out.println("Press 1 to create a user or another input to login");
+    if (menu.scanner.nextInt() == 1) {
+      menu.createCustomer();
+    }
+
+    System.out.println("-----------Login------------");
     Customer customer = menu.authenticateUser();
 
     if (customer != null) {
@@ -62,9 +72,9 @@ public class Menu {
         case 1:
           System.out.println("How much would you like to deposit?");
           amount = scanner.nextDouble();
-          try{
+          try {
             account.deposit(amount);
-          }catch(AmountException amtEx){
+          } catch (AmountException amtEx) {
             System.out.println("amount is not valid. Amount to deposit has to be greater than 0");
           }
           break;
@@ -72,7 +82,11 @@ public class Menu {
         case 2:
           System.out.println("How much would you like to withdraw?");
           amount = scanner.nextDouble();
-          account.withdraw(amount);
+          try {
+            account.withdraw(amount);
+          } catch (AmountException e) {
+            System.out.println(e.getMessage() + "\nPlease try again");
+          }
           break;
 
         case 3:
@@ -88,6 +102,32 @@ public class Menu {
           System.out.println("Invalid option. Please try again");
           break;
       }
+    }
+  }
+
+  private void createCustomer() {
+    System.out.println("Enter your name.");
+    String name = scanText.nextLine();
+    System.out.println("Enter your username.");
+    String username = scanText.nextLine();
+    System.out.println("Enter your password.");
+    String password = scanText.nextLine();
+
+    Random r = new Random();
+    int maxC = 9999;
+    int minC = 1000;
+    int maxA = 99999;
+    int minA = 10000;
+    int v1 = r.nextInt(maxC - minC + 1) + minC;
+    int v2 = r.nextInt(maxA - minA + 1) + minA;
+
+    Customer c = new Customer(v1, name, username, password, v2);
+    try {
+      DataSource.createCustomer(c);
+    } catch (UserExistException u) {
+      u.printStackTrace();
+      System.out.println("Bye");
+      System.exit(0);
     }
   }
 }
