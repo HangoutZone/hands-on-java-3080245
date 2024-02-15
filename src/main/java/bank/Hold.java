@@ -7,9 +7,19 @@ public class Hold {
 }
   public void execute(){
     String x = "";
+    int count = 0;
     Scanner scan = new Scanner(System.in);
     while (!x.equals("done")) {
-      x = scan.nextLine();
+      System.out.println(count);
+      count++;
+      if(count == 1000){
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+      }
+
+      if(count == 2000000000){
+        count = 0;
+      }
     }
 
     scan.close();
